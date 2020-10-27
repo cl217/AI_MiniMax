@@ -53,12 +53,15 @@ public class Grid {
 		//TODO
 		//check if move from (x1, y1) to (x2, y2) is valid
 		//if valid( do the move, update Piece coordinates, ret true ) 
+			grid[y2][x2] = grid[y1][x1];
+			grid[y2][x2].updateCoordinates(x2, y2);
+			grid[y1][x1] = null;
+			return true;
 		//else ret false
-		
-		return false;
+
 	}
 	
 	public Piece getCell(int x, int y) {
-		return grid[x][y];
+		return grid[y][x];
 	}
 }
