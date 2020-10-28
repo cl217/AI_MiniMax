@@ -88,21 +88,23 @@ public class Grid {
 	   
 	    
         //checks current grid piece
-        if(grid[x2][y2] != null) {
+        if(grid[y2][x2] != null) {
         	//destroyed if pit, battle if other opponent, return false if same player
         	  	
-        	
         	//checks for pit
-            if(grid[x2][y2].getDisplayText() == "P") {
+            if(grid[y2][x2].getDisplayText() == "P") {
             	System.out.println("Destroyed by Pit!");
         		grid[y1][x1] = null;
         		return true;
             }
 
-            if(grid[x2][y2].side == grid[x2][y2].side) {
+            if(grid[y1][x1].side == grid[y2][x2].side) {
             	System.out.println("Can't battle your own pieces!");
         		return false;
             }
+            
+            
+            /**TODO: Battle other opponent**/
             
         }
        
