@@ -50,8 +50,8 @@ public class Grid {
 	
 	public boolean isValidPosition(int x, int y)
 	    {
-	        if (x < 1) return false;
-	        if (y < 1) return false;
+	        if (x < 0) return false;
+	        if (y < 0) return false;
 	        if (x > d) return false;
 	        if (y > d) return false;
 	        return true;
@@ -72,7 +72,6 @@ public class Grid {
 		//if valid( do the move, update Piece coordinates, ret true ) 
 		//else ret false
 		System.out.println("[" + x1 + "]" + "[" + y1 + "] and [" + x2 + "]" + "[" + y2 + "]"); //delete after
-		
 		//checks bounds
         if (!isValidPosition(x2, y2)){
             return false;
@@ -86,13 +85,21 @@ public class Grid {
         //checks if its an adjacent cell        
 	    if (x2-x1 > 1) return false;
 	    if (y2-y1 > 1) return false;
-        
+	   
+	    
         //checks current grid piece
         if(grid[x2][y2] != null) {
-        	//battle if other opponent, return false if same opponent
+        	//destroyed if pit, battle if other opponent, return false if same player
+        	  	       	
+        	//checks for pit
+            if(grid[x2][y2].getDisplayText() == "P") {
+            	
+        		grid[y1][x1] = null;
+        		return true;
+            }
         }
-        
-
+       
+        //if cell is empty
 		grid[y2][x2] = grid[y1][x1];
 		grid[y2][x2].updateCoordinates(x2, y2);
 		grid[y1][x1] = null;
