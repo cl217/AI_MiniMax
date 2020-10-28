@@ -99,6 +99,7 @@ public class Grid {
         		return true;
             }
 
+            //checks if same side	
             if(grid[x2][y2].side == grid[x2][y2].side) {
             	System.out.println("Can't battle your own pieces!");
         		return false;
