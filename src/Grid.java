@@ -48,7 +48,14 @@ public class Grid {
 		}
 	}
 	
-	
+	public boolean isValidPosition(int x, int y)
+	    {
+	        if (x < 1) return false;
+	        if (y < 1) return false;
+	        if (x > d) return false;
+	        if (y > d) return false;
+	        return true;
+	    }
 
 	public boolean move(int x1, int y1, int x2, int y2) {
 		/*During each turn a player must select exactly one piece and move it one square up, down or
@@ -64,8 +71,28 @@ public class Grid {
 		//check if move from (x1, y1) to (x2, y2) is valid
 		//if valid( do the move, update Piece coordinates, ret true ) 
 		//else ret false
+		System.out.println("[" + x1 + "]" + "[" + y1 + "] and [" + x2 + "]" + "[" + y2 + "]"); //delete after
 		
-		//placeholder.. *replace this*
+		//checks bounds
+        if (!isValidPosition(x2, y2)){
+            return false;
+        }
+        
+        //checks if same cell
+        if(x1 == x2 && y1 == y2) {
+        	return false;
+        }
+        
+        //checks if its an adjacent cell        
+	    if (x2-x1 > 1) return false;
+	    if (y2-y1 > 1) return false;
+        
+        //checks current grid piece
+        if(grid[x2][y2] != null) {
+        	//battle if other opponent, return false if same opponent
+        }
+        
+
 		grid[y2][x2] = grid[y1][x1];
 		grid[y2][x2].updateCoordinates(x2, y2);
 		grid[y1][x1] = null;
