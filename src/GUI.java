@@ -47,15 +47,22 @@ public class GUI extends javax.swing.JFrame  {
     	topPanel.setLayout(new GridLayout(Main.grid.d, Main.grid.d));
     	for(int y = 0; y < Main.grid.d; y++) {
     		for(int x = 0; x < Main.grid.d; x++) {
-    			JButton button;
+    			JButton button = new JButton();
     			String text = "";
     			if(Main.grid.getCell(x, y) != null) {
 					text = Main.grid.getCell(x, y).getDisplayText();
+					if( Main.grid.getCell(x, y).name == 'P') {
+						button.setBackground(Color.LIGHT_GRAY);
+					}else {
+						button.setBackground(Color.GREEN);
+					}
+    			}else{
+    				button.setBackground(Color.GREEN);
     			}
-	            button = new JButton(text);
+	            
+				button.setText(text);
 	            button.setFont(new Font("Arial", Font.BOLD, 15));
 	            button.setMargin(new Insets(0, 0, 0, 0));
-	            button.setBackground(Color.GREEN);
 	            button.addActionListener(new ActionListener() {
 	            	@Override
 	                public void actionPerformed(ActionEvent e) {	         

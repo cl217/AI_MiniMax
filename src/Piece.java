@@ -18,6 +18,9 @@ public class Piece {
 	}
 	
 	public String getDisplayText() {
+		if(name == 'P') {
+			return "P";
+		}
 		return Character.toString(name) + Integer.toString(side);
 	}
 }

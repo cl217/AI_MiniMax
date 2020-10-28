@@ -34,28 +34,17 @@ public class Grid {
 				alternate++;
 			}
 		}
+		
 		//put (d/3)-1 pits in random cells in each row
-		private Random rand = new Random();
-		private Random rand1 = new Random();
+		Random rand = new Random();
 		int pitcount = 0;
-		int y;
-		while (pitcount < ((d/3)+1)) {
-			int x = rand.nextInt(24) % 6; //6 rows 
-			int yLoc = rand1.nextInt(4); //4 columns
-					if (yLoc == 0) {
-						y =2;
-					}
-					else if (yLoc ==1){
-						y = 3;
-					}
-					else if (yLoc==2){
-						y = 4;
-					}
-					else {
-						y = 5;
-					}
-					grid[d][d]= new Piece('P', 1, x, y); 
-					pitcount++;
+		for(int y = 1; y < d-1; y++) {
+			while (pitcount < ((d/3)-1)) {
+				int x = rand.nextInt(d-1); //d columns 
+				grid[y][x]= new Piece('P', 1, x, y); 
+				pitcount++;
+			}
+			pitcount = 0;
 		}
 	}
 	
