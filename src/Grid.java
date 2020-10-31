@@ -52,8 +52,8 @@ public class Grid {
 	    {
 	        if (x < 0) return false;
 	        if (y < 0) return false;
-	        if (x > d) return false;
-	        if (y > d) return false;
+	        if (x >= d) return false;
+	        if (y >= d) return false;
 	        return true;
 	    }
 
