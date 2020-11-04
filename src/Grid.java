@@ -1,33 +1,76 @@
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 public class Grid {
 
-	int d;
 	Piece[][] grid;
+	HashMap<Character, HashMap<Piece, int[]>> side0;
+	HashMap<Character, HashMap<Piece, int[]>> side1;
 	
-	public Grid(int d) {
-		this.d = d;
-		grid = new Piece[d][d];
+	public Grid() {
+		grid = new Piece[Main.d][Main.d];
+		side0 = new HashMap<Character, HashMap<Piece, int[]>>();
+		side1 = new HashMap<Character, HashMap<Piece, int[]>>();
+		char[] c = {'W', 'H', 'M'};
+		for(int i = 0; i < c.length; i++) {
+			side0.put(c[i], new HashMap<Piece, int[]>());
+			side1.put(c[i], new HashMap<Piece, int[]>());
+		}
+		
 		initializeGrid();
 	}
+	
+	public Grid(Grid copyThis) { //creates copy of a grid
+		side0 = new HashMap<Character, HashMap<Piece, int[]>>();
+		for(char c : copyThis.side0.keySet()) {
+			side0.put(c, new HashMap<Piece, int[]>());
+			for(Piece p : copyThis.side0.get(c).keySet()) {
+				side0.get(c).put(p, Arrays.copyOf(copyThis.side0.get(c).get(p), 2));
+			}
+		}
+		
+		side1 = new HashMap<Character, HashMap<Piece, int[]>>();
+		for(char c : copyThis.side1.keySet()) {
+			side1.put(c, new HashMap<Piece, int[]>());
+			for(Piece p : copyThis.side1.get(c).keySet()) {
+				side1.get(c).put(p, Arrays.copyOf(copyThis.side1.get(c).get(p), 2));
+			}
+		}
+		grid = new Piece[Main.d][Main.d];
+		grid = Arrays.stream(copyThis.grid).map(Piece[]::clone).toArray(Piece[][]::new);
+	}
+	
 
 	private void initializeGrid() {
+		/*
+		grid[3][2] = new Piece('H', 1);
+		side1.get('H').put(grid[3][2], new int[] {2,3});
+		
+		grid[2][1] = new Piece('W', 0);
+		side0.get('W').put(grid[2][1], new int[] {1,2});
+		
+		grid[2][3] = new Piece('W', 0);
+		side0.get('W').put(grid[2][3], new int[] {3,2});
+		
+		grid[1][4] = new Piece('M', 0);
+		side0.get('M').put(grid[1][4], new int[] {4,1});
+		*/
+
 		//put alternating wumpus, hero, mage in bottom and top row
 		int alternate = 1;
-		for(int i = 0; i < d; i++) {
+		for(int i = 0; i < Main.d; i++) {
+			char c = 'O';
 			switch(alternate) {
-				case 1: 
-					grid[0][i] = new Piece('W', 1, i, 0);
-					grid[d-1][i] = new Piece('W', 0, i, d-1);
-					break;
-				case 2: 
-					grid[0][i] = new Piece('H', 1, i, 0);
-					grid[d-1][i] = new Piece('H', 0, i, d-1);
-					break;
-				case 3: 
-					grid[0][i] = new Piece('M', 1, i, 0);
-					grid[d-1][i] = new Piece('M', 0, i, d-1);
-					break;
+				case 1: c = 'W'; break;
+				case 2: c = 'H'; break;
+				case 3: c = 'M'; break;
 			}
+			grid[0][i] = new Piece(c, 1);
+			grid[Main.d-1][i] = new Piece(c, 0);
+			
+			side1.get(c).put(grid[0][i], new int[]{i, 0});
+			side0.get(c).put(grid[Main.d-1][i], new int[] {i, Main.d-1});
+			
 			if(alternate == 3) {
 				alternate = 1;
 			}else {
@@ -36,90 +79,125 @@ public class Grid {
 		}
 		
 		//put (d/3)-1 pits in random cells in each row
+		/*
 		Random rand = new Random();
 		int pitcount = 0;
-		for(int y = 1; y < d-1; y++) {
-			while (pitcount < ((d/3)-1)) {
-				int x = rand.nextInt(d-1); //d columns 
-				grid[y][x]= new Piece('P', 1, x, y); 
+		for(int y = 1; y < Main.d-1; y++) {
+			while (pitcount < ((Main.d/3)-1)) {
+				int x = rand.nextInt(Main.d-1); //d columns 
+				grid[y][x]= new Piece('P', -1); 
 				pitcount++;
 			}
 			pitcount = 0;
 		}
+		*/
+		grid[1][2] = new Piece('P', -1);
 	}
 	
-	public boolean isValidPosition(int x, int y)
-	    {
-	        if (x < 0) return false;
-	        if (y < 0) return false;
-	        if (x >= d) return false;
-	        if (y >= d) return false;
-	        return true;
-	    }
-
-	public boolean move(int x1, int y1, int x2, int y2) {
-		/*During each turn a player must select exactly one piece and move it one square up, down or
-		diagonally. If a piece is move into a square containing one of the opponent's pieces then
-		they do battle. If a hero battles a wumpus then the her shoots the wumpus and kills it. If a
-		mage does battle with a hero then it uses its fire magic to destroy the hero. If a wumpus
-		does battle with a mage then the wumpus will eat the mage. If two pieces of the same
-		type do battle then both pieces are destroyed. If a piece moves into a cell containing a pit
-		then it is destroyed and a player cannot move a piece into a cell that contains one of their
-		own pieces */
-		
-		//TODO
-		//check if move from (x1, y1) to (x2, y2) is valid
-		//if valid( do the move, update Piece coordinates, ret true ) 
-		//else ret false
-		System.out.println("[" + x1 + "]" + "[" + y1 + "] and [" + x2 + "]" + "[" + y2 + "]"); //delete after
+	public boolean isValidMove(int x1, int y1, int x2, int y2){
 		//checks bounds
-        if (!isValidPosition(x2, y2)){
-            return false;
-        }
-        
+		if (x2 < 0) return false;
+		if (y2 < 0) return false;
+		if (x2 >= Main.d) return false;
+		if (y2 >= Main.d) return false;
+		
         //checks if same cell
         if(x1 == x2 && y1 == y2) {
         	return false;
         }
-        
+	        
         //checks if its an adjacent cell        
-	    if (x2-x1 > 1) return false;
-	    if (y2-y1 > 1) return false;
-	   
+	    if (Math.abs(x2-x1) > 1) return false;
+	    if (Math.abs(y2-y1) > 1) return false;
 	    
+        //checks if same side	
+        if(grid[y2][x2] != null && grid[y1][x1].side == grid[y2][x2].side) {
+    		return false;
+        }
+
+		return true;
+	        
+	}
+
+	public boolean move(int x1, int y1, int x2, int y2) {
+        if (!isValidMove(x1, y1, x2, y2)){
+            return false;
+        }
+        
         //checks current grid piece
         if(grid[y2][x2] != null) {
-        	//destroyed if pit, battle if other opponent, return false if same player
-        	  	
-        	//checks for pit
-            if(grid[y2][x2].getDisplayText() == "P") {
-            	System.out.println("Destroyed by Pit!");
-        		grid[y1][x1] = null;
-        		return true;
+            //battle
+            Piece p1 = grid[y1][x1];
+            Piece p2 = grid[y2][x2];
+            
+            if(p1.name == p2.name) {
+            	//both die
+            	if(p1.side==0) {
+            		side0.get(p1.name).remove(p1);
+            		side1.get(p2.name).remove(p2);
+            	}else {
+            		side0.get(p2.name).remove(p2);
+            		side1.get(p1.name).remove(p1);
+            	}
+				grid[y1][x1] = null; 
+				grid[y2][x2] = null; 
+				return true;
             }
-
-
-            //checks if same side	
-            if(grid[y1][x1].side == grid[y2][x2].side) {
-
-            	System.out.println("Can't battle your own pieces!");
-        		return false;
+            
+            //p2 dies
+            if( ( p1.name=='W' && p2.name=='M' ) || ( p1.name=='H' && p2.name=='W' ) || ( p1.name=='M' && p2.name=='H' ) ) {
+            	int[] coord;
+            	if(p2.side==0) {
+            		side0.get(p2.name).remove(p2);
+            		coord = side1.get(p1.name).get(p1);
+            	}else {
+            		side1.get(p2.name).remove(p2);
+            		coord = side0.get(p1.name).get(p1);
+            	}
+        		coord[0] = x2;
+        		coord[1] = y2;
+            	grid[y2][x2] = grid[y1][x1];
+            	grid[y1][x1] = null;
+            	return true;
+            }else { //P1 dies
+            	if(p1.side==0) {
+            		side0.get(p1.name).remove(p1);
+            	}else {
+            		side1.get(p1.name).remove(p1);
+            	}
+            	grid[y1][x1] = null;
+            	return true;
             }
-            
-            
-            /**TODO: Battle other opponent**/
-            
         }
        
-        //if cell is empty
+        //(x2, y2) empty
 		grid[y2][x2] = grid[y1][x1];
-		grid[y2][x2].updateCoordinates(x2, y2);
 		grid[y1][x1] = null;
+		int[] coord = (grid[y2][x2].side == 0)? side0.get(grid[y2][x2].name).get(grid[y2][x2]) : side1.get(grid[y2][x2].name).get(grid[y2][x2]);
+		coord[0] = x2;
+		coord[1] = y2;
+		
 		return true;
 
 	}
 	
 	public Piece getCell(int x, int y) {
 		return grid[y][x];
+	}
+	
+	public int getNumPieces(int side) {
+		HashMap<Character, HashMap<Piece, int[]>> map = (side == 0)? side0 : side1;
+		int size = 0;
+		for(Character c : map.keySet()) {
+			size += map.get(c).size();
+		}
+		return size;
+	}
+	public int[] getCoord(Piece p) {
+		if(p.side == 0) {
+			return side0.get(p.name).get(p);
+		}else {
+			return side1.get(p.name).get(p);
+		}
 	}
 }
