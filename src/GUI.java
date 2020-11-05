@@ -20,6 +20,11 @@ public class GUI extends javax.swing.JFrame  {
     int[] move1;
     int[] aiMove;
     
+    Color AI = new Color(153,0,0);
+    Color human = new Color(0,0,153);
+    Color AImove = new Color(255, 153, 0);
+    Color humanMove = new Color(51, 204, 255);
+    
     ArrayList<JButton> buttonList;
 	public GUI(){
 		
@@ -56,12 +61,18 @@ public class GUI extends javax.swing.JFrame  {
     			if(Main.grid.getCell(x, y) != null) {
 					text = Main.grid.getCell(x, y).getDisplayText();
 					if( Main.grid.getCell(x, y).name == 'P') {
-						button.setBackground(Color.LIGHT_GRAY);
+						button.setBackground(new Color(153, 102, 0));
 					}else {
-						button.setBackground(Color.GREEN);
+						button.setBackground(Color.LIGHT_GRAY);
+						
+						if(Main.grid.getCell(x, y).side == 0) {
+							button.setForeground(human);
+						}else {
+							button.setForeground(AI);
+						}
 					}
     			}else{
-    				button.setBackground(Color.GREEN);
+    				button.setBackground(Color.LIGHT_GRAY);
     			}
 	            
 				button.setText(text);
@@ -76,7 +87,7 @@ public class GUI extends javax.swing.JFrame  {
 	            		int x = index%d;
 	            		
 	            		if( move1[0] == x && move1[1] == y) {
-	            			buttonList.get(y*Main.d+x).setBackground(Color.GREEN);
+	            			buttonList.get(y*Main.d+x).setBackground(Color.LIGHT_GRAY);
 	            			move1[0] = -1;
 	            			move1[1] = -1;
 	            			return;
@@ -86,7 +97,15 @@ public class GUI extends javax.swing.JFrame  {
 	            		if(move1[0] == -1) {
 		            		//check if human piece
 		            		if(Main.grid.getCell(x, y) == null || Main.grid.getCell(x, y).side != 0) {
-		            			label.setText("Invalid piece to move.");
+	            				if(Main.grid.getNumPieces(0) == 0 && Main.grid.getNumPieces(1) == 0) {
+	            					label.setText("Tied.");
+	            				}else if(Main.grid.getNumPieces(0) == 0) {
+	            					label.setText("You lost. AI won.");
+	            				}else if(Main.grid.getNumPieces(1)==0){
+	            					label.setText("You won. AI lost.");
+	            				}else {
+	            					label.setText("Invalid piece to move.");
+	            				}
 		            			return;
 		            		}
 		            		
@@ -98,16 +117,25 @@ public class GUI extends javax.swing.JFrame  {
 	            			//System.out.println(Main.grid.getCell(move1[0], move1[1]).getDisplayText()+"("+move1[0]+", " + move1[1] +") -> ("+x+", " +y+ ")" );
 	            			if(!success) {
 	            				//System.out.println("Invalid move");
+	 
 	            				label.setText("Invalid move.");
 	            			}else { //update GUI
 	            				if(aiMove != null) {
-		            				buttonList.get(aiMove[1]*Main.d + aiMove[0]).setBackground(Color.GREEN);
-		            				buttonList.get(aiMove[3]*Main.d + aiMove[2]).setBackground(Color.GREEN);
+		            				buttonList.get(aiMove[1]*Main.d + aiMove[0]).setBackground(Color.LIGHT_GRAY);
+		            				buttonList.get(aiMove[3]*Main.d + aiMove[2]).setBackground(Color.LIGHT_GRAY);
 	            				}
+	            				
 	            				buttonList.get(move1[1]*Main.d + move1[0]).setText("");
-	            				buttonList.get(move1[1]*Main.d + move1[0]).setBackground(Color.GREEN);
-	            				if(Main.grid.getCell(x, y) != null) {
-	            					buttonList.get(y*Main.d + x).setText(Main.grid.getCell(x, y).getDisplayText());
+	            				buttonList.get(move1[1]*Main.d + move1[0]).setBackground(Color.LIGHT_GRAY);
+	            				Piece moveP = Main.grid.getCell(x, y);
+	            				if(moveP != null) {
+	            					JButton moveB = buttonList.get(y*Main.d + x);
+	            					moveB.setText(moveP.getDisplayText());
+	            					if(moveP.side == 0) {
+	            						moveB.setForeground(human);
+	            					}else if(moveP.side==1){
+	            						moveB.setForeground(AI);
+	            					}
 	            				}else {
 	            					buttonList.get(y*Main.d + x).setText("");
 	            				}
@@ -127,26 +155,35 @@ public class GUI extends javax.swing.JFrame  {
 			            				
 			            				//Update GUI
 			            				buttonList.get(aiMove[1]*Main.d + aiMove[0]).setText("");
-			            				buttonList.get(aiMove[1]*Main.d + aiMove[0]).setBackground(Color.RED);
-			            				buttonList.get(aiMove[3]*Main.d + aiMove[2]).setBackground(Color.RED);
+			            				buttonList.get(aiMove[1]*Main.d + aiMove[0]).setBackground(AImove);
+			            				buttonList.get(aiMove[3]*Main.d + aiMove[2]).setBackground(AImove);
 			            				if(Main.grid.getCell(aiMove[2], aiMove[3]) != null) {
-			            					buttonList.get(aiMove[3]*Main.d + aiMove[2]).setText(Main.grid.getCell(aiMove[2], aiMove[3]).getDisplayText());
+			            					JButton moveB =buttonList.get(aiMove[3]*Main.d + aiMove[2]);
+			            					moveB.setText(Main.grid.getCell(aiMove[2], aiMove[3]).getDisplayText());
+			            					if(Main.grid.getCell(aiMove[2], aiMove[3]).side == 0) {
+			            						moveB.setForeground(human);
+			            					}else if(Main.grid.getCell(aiMove[2], aiMove[3]).side==1){
+			            						moveB.setForeground(AI);
+			            					}
 			            				}else {
 			            					buttonList.get(aiMove[3]*Main.d + aiMove[2]).setText("");
 			            				}
 			            				System.out.println("AI has moved.");
-			            				if(Main.grid.getNumPieces(0) == 0) {
-			            					label.setText("You lost. AI won.");
-			            				}else if(Main.grid.getNumPieces(1)==0){
-			            					label.setText("You won. AI lost.");
-			            				}
 
 		            				}else {
 		            					System.out.println("Ai could not make a move.");
 		            				}
 	            				}
 	            			}
+            				if(Main.grid.getNumPieces(0) == 0 && Main.grid.getNumPieces(1) == 0) {
+            					label.setText("Tied.");
+            				}else if(Main.grid.getNumPieces(0) == 0) {
+            					label.setText("You lost. AI won.");
+            				}else if(Main.grid.getNumPieces(1)==0){
+            					label.setText("You won. AI lost.");
+            				}
 	            		}
+	            		
 	            	}
 	            });
 	            buttonList.add(button);
