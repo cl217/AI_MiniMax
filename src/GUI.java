@@ -4,7 +4,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.*;
-
+/**
+ * 
+ * @author Cindy Lin
+ *
+ */
 public class GUI extends javax.swing.JFrame  {
 
 	JFrame jframe;

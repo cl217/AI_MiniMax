@@ -1,6 +1,11 @@
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
+/**
+ * 
+ * @author Cindy Lin
+ *
+ */
 public class Grid {
 
 	Piece[][] grid;

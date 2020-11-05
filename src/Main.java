@@ -1,5 +1,9 @@
 import java.util.Scanner;
-
+/**
+ * 
+ * @author Cindy Lin
+ *
+ */
 public class Main {
 	
 	public static Grid grid;

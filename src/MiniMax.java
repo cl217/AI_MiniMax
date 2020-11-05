@@ -1,7 +1,11 @@
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.PriorityQueue;
-
+/**
+ * 
+ * @author Cindy Lin
+ *
+ */
 public class MiniMax {
 
 	Grid grid;

@@ -1,4 +1,8 @@
-
+/**
+ * 
+ * @author Cindy Lin
+ *
+ */
 public class Piece {
 	public char name; //W, H, M, P
 	public int side; //0 (Human), 1 (AI), -1 (PIT)

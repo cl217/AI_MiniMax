@@ -1,5 +1,9 @@
 import java.util.ArrayList;
-
+/**
+ * 
+ * @author Cindy Lin
+ *
+ */
 public class Node implements Comparable<Node> {
 	
 	int hEndState = 0;
