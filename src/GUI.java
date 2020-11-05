@@ -30,11 +30,11 @@ public class GUI extends javax.swing.JFrame  {
 		newGrid(Main.d);
 		topPanel();
 		bottomPanel();
-        setPreferredSize(new Dimension(1500, 1000)); 
+        setPreferredSize(new Dimension(1000, 700)); 
         getContentPane().setLayout(new GridLayout());  
         getContentPane().add(splitPane);             
         splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT); 
-        splitPane.setDividerLocation(700);                   
+        splitPane.setDividerLocation(500);                   
         splitPane.setTopComponent(scrollPane);                  
         splitPane.setBottomComponent(bottomPanel);           
         pack();  
@@ -66,9 +66,18 @@ public class GUI extends javax.swing.JFrame  {
 	            button.addActionListener(new ActionListener() {
 	            	@Override
 	                public void actionPerformed(ActionEvent e) {	         
+
 	            		int index = buttonList.indexOf(button);
 	            		int y = index/d;
 	            		int x = index%d;
+	            		
+	            		if( move1[0] == x && move1[1] == y) {
+	            			buttonList.get(y*Main.d+x).setBackground(Color.GREEN);
+	            			move1[0] = -1;
+	            			move1[1] = -1;
+	            			return;
+	            		}
+	            		
 	            		
 	            		if(move1[0] == -1) {
 		            		//check if human piece
@@ -104,7 +113,7 @@ public class GUI extends javax.swing.JFrame  {
 	            				
 	            				if(Main.grid.side0.size() > 0 && Main.grid.side1.size() > 0 ) {
 		            				//Make AI move here
-	            					label.setText("AI is making a move.");
+	            					//label.setText("AI is making a move.");
 	            					System.out.println("AI is making move..");
 		            				MiniMax m = new MiniMax();
 		            				aiMove = m.getNextMove();
@@ -121,16 +130,16 @@ public class GUI extends javax.swing.JFrame  {
 			            				}else {
 			            					buttonList.get(aiMove[3]*Main.d + aiMove[2]).setText("");
 			            				}
-			            				label.setText("Your move.");
+			            				System.out.println("AI has moved.");
+			            				if(Main.grid.getNumPieces(0) == 0) {
+			            					label.setText("You lost. AI won.");
+			            				}else if(Main.grid.getNumPieces(1)==0){
+			            					label.setText("You won. AI lost.");
+			            				}
+
 		            				}else {
 		            					System.out.println("Ai could not make a move.");
 		            				}
-	            				}else {
-	            					if(Main.grid.side0.size() == 0) {
-	            						label.setText("You lost. AI won.");
-	            					}else {
-	            						label.setText("You won. AI lost.");
-	            					}
 	            				}
 	            			}
 	            		}
@@ -155,7 +164,7 @@ public class GUI extends javax.swing.JFrame  {
 		//Component horizontalStrut = Box.createHorizontalStrut(100);
 		//bottomPanel.add(horizontalStrut);
 		
-		label = new JLabel("Your move.");
+		label = new JLabel("");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		bottomPanel.add(label);
 		

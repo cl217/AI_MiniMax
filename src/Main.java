@@ -1,33 +1,53 @@
+import java.util.Scanner;
+
 public class Main {
 	
 	public static Grid grid;
 	public static int d;
+	public static int depth;
 	
 	public static void main (String[]args) {
 		
+		/*
 		d = 9;
+		depth = 9;
+		grid = new Grid();
+		GUI gui = new GUI();
+		gui.setVisible(true);
+		*/
+
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Choose dxd grid size. d must be multiple of 3:");
+		d = isValidInput(scanner.next());
+		while( d == -1 || d % 3 != 0 ) {
+			System.out.println("Invalid d. Try again:");
+			d = isValidInput(scanner.next());
+		}
+		
+		System.out.println("Choose search depth: depth=");
+		depth = isValidInput(scanner.next());
+		while( depth <= 0 ) {
+			System.out.println("Invalid depth. Try again:");
+			depth = isValidInput(scanner.next());
+		}
+		
+		scanner.close();
+		
 		grid = new Grid();
 		GUI gui = new GUI();
 		gui.setVisible(true);
 		
-		/*
-		MiniMax m = new MiniMax();
-		int[] a = m.getNextMove();
-		grid.move( a[0], a[1], a[2], a[3]);
-		*/
-		
-		/*
-		Node value = new Node(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
-		Node alphabeta = new Node(0, 0, -500);
-				
-				
-		if( value.compareTo(alphabeta) < 0) { //if value is less alpha
-			System.out.println("value is less than alphabeta");
-			value = alphabeta;
-		}
-		*/
-
+	}
 	
+	
+	public static int isValidInput(String str) {
+		try {
+			int i = Integer.parseInt(str);
+			return i;
+		}catch(NumberFormatException e) {
+			return -1;
+		}
 	}
 	
 	

@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
 
 public class Node implements Comparable<Node> {
 	
@@ -8,10 +6,13 @@ public class Node implements Comparable<Node> {
 	int hNumPieces;
 	int hAdjacent;
 	double hDistance;
-
+	
+	int depth =0;
+	boolean visited = false;
 	
 	//int side;
 	int[] move;
+	int[] nextMove;
 	Grid grid;
 	
 	
